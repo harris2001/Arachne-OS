@@ -1,5 +1,10 @@
-BOOT_SRC = simple_boot.asm
-BOOT_BIN = simple_boot.bin
+ASM = nasm
+
+SRC_DIR = src
+BUILD_DIR = build
+
+BOOT_SRC = $(SRC_DIR)/simple_boot.asm
+BOOT_BIN = $(BUILD_DIR)/simple_boot.bin
 
 NASM_FLAGS = -f bin
 

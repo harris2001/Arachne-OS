@@ -56,5 +56,11 @@
 ### Build
 
 ```bash
-make build
+make
+```
+
+### Run
+
+```bash
+qemu-system-x86_64 -kernel build/boot.bin
 ```
