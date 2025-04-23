@@ -16,6 +16,7 @@
 [446---510 bytes] Partition Table
 [510---512 bytes] Magic Number
 ```
-
-<img href="../Images/simple_bootloader_x.png">
+<p align="center">
+  <img src="../Images/simple_bootloader_x.png" padding="auto" width="300px"/>
+</p>
 
