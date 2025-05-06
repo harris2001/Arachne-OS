@@ -25,11 +25,7 @@ jobs:
       run: make
 
     - name: Run bootloader in QEMU
-      run: make run
-
-    - name: Debug bootloader with QEMU
-      run: make debug
-      if: ${{ always() }}
+      run: make run-debug
 
     - name: Clean build artifacts
       run: make clean
