@@ -7,12 +7,10 @@
 
 - [About](#about)
 - [Features](#features)
-- [Architecture](#architecture)
+- [Technologies](#technologies)
 - [Getting Started](#getting-started)
 - [Project Layout](#project-layout)
 - [Documentation](#documentation)
-- [Benchmarks](#benchmarks)
-- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -20,29 +18,27 @@
 
 ## About
 
-**Arachne** is a custom OS designed from scratch for high-performance, concurrent systems. It focuses on lightweight threading, and async-first design. Think of it as a playground for modern systems programming — low overhead, modular, and really dead simple.
+**Arachne** is a modular real-time operating system (RTOS) designed for AI-native workloads. It is built from scratch to support compiler-aware OS design and efficient on-device machine learning.
 
 ---
 
 ## Features
 
-- Microkernel architecture
-- Lightweight user-space threads (fibers)
-- Lock-free message-passing concurrency
-- Fast context switching
-- Minimal syscall interface
-- Designed for bare-metal performance
+- Modular, preemptive kernel
+- Deterministic task scheduling for real-time AI inference
+- Compiler-aware runtime hooks
+- Lightweight threading and message-passing
+- Real-time memory management for concurrent workloads
+- Simulated peripheral support (UART, timers, GPIO)
+
 
 ---
 
-## Architecture
+## Technologies
 
-- **Kernel Type**: Microkernel
-- **Concurrency Model**: Message-passing and async-first
-- **Threading**: Custom scheduler with fibers and cooperative multitasking
-- **Memory Management**: Paging with minimal kernel memory footprint
-- **Target Arch**: x86_64 (more coming)
-
+- Languages: C++, x86-64 Assembly
+- Platform: Bare-metal, QEMU-compatible x86
+- Build System: Make, NASM, LD
 ---
 
 ## Getting Started
@@ -56,7 +52,8 @@
 ### Build
 
 ```bash
-make
+git clone https://github.com/harris2001/Arachne
+make run
 ```
 
 ### Run
@@ -64,3 +61,30 @@ make
 ```bash
 qemu-system-x86_64 -kernel build/boot.bin
 ```
+
+## Project Layout
+
+```plaintext
+Arachne/
+├── boot/        # Bootloader and entry point
+├── kernel/      # Scheduler, memory, syscalls
+├── drivers/     # Basic device drivers
+├── libs/        # Standard libraries and helpers
+├── user/        # User-space test programs
+├── tests/       # Unit and integration tests
+├── docs/        # Design documentation
+├── build/       # Build artifacts
+├── Makefile     # Build script
+└── README.md    # Project overview
+```
+
+## Documentation
+
+Architecture notes and design documents are available in the `docs/` directory.
+
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request. For larger changes, please open an issue first to discuss your ideas.
+
+## License
+
+This project is licensed under the MIT License.
