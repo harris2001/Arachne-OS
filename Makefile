@@ -1,10 +1,10 @@
 ASM = nasm
 
-SRC_DIR = src
+SRC_DIR = src/impl/x86_64/boot
 BUILD_DIR = build
 
-BOOT_SRC = $(SRC_DIR)/simple_boot.asm
-BOOT_BIN = $(BUILD_DIR)/simple_boot.bin
+BOOT_SRC = $(SRC_DIR)/boot.asm
+BOOT_BIN = $(BUILD_DIR)/boot.bin
 
 NASM_FLAGS = -f bin
 
@@ -19,6 +19,7 @@ all: $(BOOT_BIN)
 # Assembling the bootloader
 # dependencies are $< and $@ is the target
 $(BOOT_BIN): $(BOOT_SRC)
+	echo "Assembling $< to $@"
 	nasm $(NASM_FLAGS) $< -o $@ 
 
 # RUN in QEMU
