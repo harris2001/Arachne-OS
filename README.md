@@ -53,17 +53,12 @@
 - QEMU or real hardware
 - `make`, `nasm`, `ld`, `gcc`
 
-### Build
+### Build & Run
 
 ```bash
 git clone https://github.com/harris2001/Arachne
 make run
-```
-
-### Run
-
-```bash
-qemu-system-x86_64 -kernel build/boot.bin
+vncviewer localhost:5900
 ```
 
 ## Project Layout
