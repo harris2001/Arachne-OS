@@ -1,6 +1,10 @@
 # Arachne OS 🕸️  
 *A high-performance operating system for fast, concurrent systems.*
 
+<div align="center">
+    <img src="icons/logo.png" alt="Arachne Logo" width="350"/>
+</div>
+
 ---
 
 ## Table of Contents
