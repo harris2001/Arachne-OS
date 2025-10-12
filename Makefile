@@ -20,6 +20,7 @@ all: $(BOOT_BIN)
 # dependencies are $< and $@ is the target
 $(BOOT_BIN): $(BOOT_SRC)
 	echo "Assembling $< to $@"
+	if [ ! -d $(BUILD_DIR) ]; then mkdir -p $(BUILD_DIR); fi
 	nasm $(NASM_FLAGS) $< -o $@ 
 
 # RUN in QEMU
