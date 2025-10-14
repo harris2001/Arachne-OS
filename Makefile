@@ -3,7 +3,7 @@ ASM = nasm
 SRC_DIR = src/impl/x86_64/boot
 BUILD_DIR = build
 
-BOOT_SRC = $(SRC_DIR)/loader.s
+BOOT_SRC = $(SRC_DIR)/boot.asm
 BOOT_BIN = $(BUILD_DIR)/boot.bin
 
 NASM_FLAGS = -f bin
