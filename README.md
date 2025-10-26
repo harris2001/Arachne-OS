@@ -50,14 +50,14 @@
 ### Requirements
 
 - Cross-compiler toolchain for x86_64
-- QEMU or real hardware
-- `make`, `nasm`, `ld`, `gcc`
+- QEMU or real hardware (`qemu-system-x86_64`)
+- `make`, `nasm`, `ld`, `gcc`, `grub-pc-bin`, `xorriso` 
 
 ### Build & Run
 
 ```bash
 git clone https://github.com/harris2001/Arachne
-make run
+make
 vncviewer localhost:5900
 ```
 
@@ -65,14 +65,21 @@ vncviewer localhost:5900
 
 ```plaintext
 Arachne/
-├── boot/        # Bootloader and entry point
+├── build/       # Build artifacts
+├── devs/        # Developers setup (if you want to contribute) 
+├── icons/       # Project icons and logos 
+├── src/         # Source code
+│   ├── impl/    # Architecture-specific code
+│   │   └── x86_64/ # x86_64 implementation
+│   └── common/  # Architecture-independent code
+├── targets/     # Build targets and configurations
+│   └── x86_64/  # x86_64 target configuration
 ├── kernel/      # Scheduler, memory, syscalls
 ├── drivers/     # Basic device drivers
 ├── libs/        # Standard libraries and helpers
 ├── user/        # User-space test programs
 ├── tests/       # Unit and integration tests
 ├── docs/        # Design documentation
-├── build/       # Build artifacts
 ├── Makefile     # Build script
 └── README.md    # Project overview
 ```
