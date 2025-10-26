@@ -1,42 +1,60 @@
 NASM_FLAGS = -f elf32
-GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra # freestanding:= no standard library, or main
+# freestanding:= no standard library, or main
+# -fno-exceptions -fno-rtti := disable exceptions and RTTI
+GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra  -fno-exceptions -fno-rtti 
 LD_FLAGS = -m elf_i386 
-TARGET = targets/x86_64
 
 SRC_DIR = src/impl/x86_64/boot
 BUILD_DIR = build
+TARGET = targets/x86_64
 
-BOOT_SRC = $(SRC_DIR)/boot.asm
-BOOT_BIN = $(BUILD_DIR)/boot.bin
+ISO_DIR = $(TARGET)/iso
+ISO_FILE = $(BUILD_DIR)/arachne_x86_64.iso
 
 QEMU = qemu-system-x86_64
-QEMU_FLAGS = -drive format=raw, file=$(BOOT_BIN)
+QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown 
 
-objects = loader.o \
-		  kernel.o
+# Source files
+OBJECTS = \
+		$(SRC_DIR)/header.o \
+		$(SRC_DIR)/loader.o \
+		src/kernel.o
 
-.PHONY: all clean run
 # Default target
-install: kernel.bin 
-	if [ ! -d $(BUILD_DIR) ]; then mkdir -p $(BUILD_DIR); fi
-	sudo cp $< $(BOOT_BIN)
-	@echo "Build complete"
+.PHONY: all clean run iso install
 
+all: $(ISO_FILE)
 
-# Compiling cpp files
+# ===== Compiling to ISO =====
+
+# Compiling C++
 %.o: %.cpp
 	g++ $(GPP_FLAGS) -c $< -o $@
-# Compiling asm files
+
+# Compiling Assembly 
 %.o: %.asm
 	nasm $(NASM_FLAGS) $< -o $@
 
-# Linking object files
-kernel.bin: $(TARGET)/linker.ld $(objects) 
-	ld $(LD_FLAGS) -T $< -o $@ $(objects)
+# ===== Linking Kernel ELF =====
+$(BUILD_DIR)/kernel.bin: $(OBJECTS) $(TARGET)/linker.ld
+	mkdir -p $(BUILD_DIR)
+	ld $(LD_FLAGS) -T $(TARGET)/linker.ld -o $@ $(OBJECTS)
 
-# RUN in QEMU
-run: $(BOOT_BIN)
-	$(QEMU) $(QEMU_FLAGS) -nographic
+# ===== Building GRUB ISO =====
+$(ISO_FILE): $(BUILD_DIR)/kernel.bin $(TARGET)/iso/boot/grub/grub.cfg
+	mkdir -p $(ISO_DIR)/boot
+	cp $(BUILD_DIR)/kernel.bin $(ISO_DIR)/boot/kernel.bin
+	grub-mkrescue -o $(ISO_FILE) $(ISO_DIR)
+
+
+# ===== RUN in QEMU =====
+run: $(ISO_FILE)
+	$(QEMU) $(QEMU_FLAGS)
+
+# ===== INSTALL to /boot =====
+install: $(BUILD_DIR)/kernel.bin
+	sudo cp $< /boot/arachne_x86_64.bin
+	@echo "Installed to /boot/arachne_x86_64.bin"
 
 clean:
-	rm -f $(BOOT_BIN)
+	rm -rf $(BOOT_DIR) $(SRC_DIR)/*.o src/*.o 
