@@ -18,7 +18,7 @@ QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown
 OBJECTS = \
 		$(SRC_DIR)/header.o \
 		$(SRC_DIR)/loader.o \
-		src/kernel.o
+		src/impl/common/kernel.o
 
 # Default target
 .PHONY: all clean run iso install
@@ -57,4 +57,4 @@ install: $(BUILD_DIR)/kernel.bin
 	@echo "Installed to /boot/arachne_x86_64.bin"
 
 clean:
-	rm -rf $(BOOT_DIR) $(SRC_DIR)/*.o src/*.o 
+	rm -rf $(BOOT_DIR) $(SRC_DIR)/*.o src/impl/common/*.o 
