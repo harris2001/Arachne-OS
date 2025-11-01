@@ -6,8 +6,8 @@ header_start:
     dd header_end - header_start                                           ; total header length
     dd 0x100000000 - (0xE85250D6 + 0x0 + (header_end - header_start))      ; checksum
 
-    ;end tag
-    db 0                                                                   ; tag type (0 = end)
-    db 0                                                                   ; flags (0 = none)
+    ; end tag
+    dw 0                                                                   ; tag type (0 = end)
+    dw 0                                                                   ; flags (0 = none)
     dd 8                                                                   ; size of tag
 header_end:

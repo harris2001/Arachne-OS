@@ -5,9 +5,9 @@ global loader
 extern kernel_main
 
 loader:
-    mov esp, kernel_stack + 4096      ; Set up the stack pointer
-    push eax                          ; Push multiboot struct onto the stack
-    push ebx
+    mov esp, kernel_stack_top         ; Set up the stack pointer
+    push eax                          ; Push magic number (second parameter)
+    push ebx                          ; Push multiboot info structure pointer (first parameter)
     call kernel_main                  ; Call the kernel's main function
 
 _stop:
@@ -17,5 +17,7 @@ _stop:
 
 section .bss
 align 16                              ; To prevent any hardware faults force alignment 
-kernel_stack: resb 4096               ; Allocate 4KB for the kernel stack
+kernel_stack_bottom:
+    resb 4096                         ; Allocate 4KB for the kernel stack
+kernel_stack_top:                     ; Label for the top of the stack
 
