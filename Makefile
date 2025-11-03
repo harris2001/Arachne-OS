@@ -57,4 +57,4 @@ install: $(BUILD_DIR)/kernel.bin
 	@echo "Installed to /boot/arachne_x86_64.bin"
 
 clean:
-	rm -rf $(BOOT_DIR) $(SRC_DIR)/*.o src/impl/common/*.o 
+	rm -rf $(BUILD_DIR) $(SRC_DIR)/*.o src/impl/common/*.o 
