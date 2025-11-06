@@ -16,7 +16,7 @@ _stop:
     jmp _stop                         ; Infinite loop to prevent falling through
 
 section .bss
-align 16                              ; To prevent any hardware faults force alignment 
+align 16                              ; To prevent any hardware faults, force alignment 
 kernel_stack_bottom:
     resb 4096                         ; Allocate 4KB for the kernel stack
 kernel_stack_top:                     ; Label for the top of the stack
