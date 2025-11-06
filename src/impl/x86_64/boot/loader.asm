@@ -6,8 +6,8 @@ extern kernel_main
 
 loader:
     mov esp, kernel_stack_top         ; Set up the stack pointer
-    push eax                          ; Push magic number (second parameter)
     push ebx                          ; Push multiboot info structure pointer (first parameter)
+    push eax                          ; Push magic number (second parameter)
     call kernel_main                  ; Call the kernel's main function
 
 _stop:

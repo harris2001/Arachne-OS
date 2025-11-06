@@ -12,7 +12,7 @@ void printf(std::string_view str)
 {
     for(size_t i = 0; i < str.size(); i++)
     {
-        video_memory[i] = (video_memory[i] & 0xFF00) | str[i];
+        video_memory[i] = 0x0F00 | str[i];  // 0x0F = white on black
     }
 }
 
