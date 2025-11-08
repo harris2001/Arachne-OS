@@ -1,45 +1,60 @@
-ASM = nasm
+NASM_FLAGS = -f elf32
+# freestanding:= no standard library, or main
+# -fno-exceptions -fno-rtti := disable exceptions and RTTI
+GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra  -fno-exceptions -fno-rtti 
+LD_FLAGS = -m elf_i386 
 
-SRC_DIR = src
+SRC_DIR = src/impl/x86_64/boot
 BUILD_DIR = build
+TARGET = targets/x86_64
 
-BOOT_SRC = $(SRC_DIR)/simple_boot.asm
-BOOT_BIN = $(BUILD_DIR)/simple_boot.bin
-
-NASM_FLAGS = -f bin
+ISO_DIR = $(TARGET)/iso
+ISO_FILE = $(BUILD_DIR)/arachne_x86_64.iso
 
 QEMU = qemu-system-x86_64
-QEMU_FLAGS = -drive format=raw,file=$(BOOT_BIN)
+QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown 
 
-GDB_PORT = 1234
+# Source files
+OBJECTS = \
+		$(SRC_DIR)/header.o \
+		$(SRC_DIR)/loader.o \
+		src/impl/common/kernel.o
 
 # Default target
-all: $(BOOT_BIN)
+.PHONY: all clean run iso install
 
-# Assembling the bootloader
-# dependencies are $< and $@ is the target
-$(BOOT_BIN): $(BOOT_SRC)
-	nasm $(NASM_FLAGS) $< -o $@ 
+all: $(ISO_FILE)
 
-# RUN in QEMU
-run: $(BOOT_BIN)
+# ===== Compiling to ISO =====
+
+# Compiling C++
+%.o: %.cpp
+	g++ $(GPP_FLAGS) -c $< -o $@
+
+# Compiling Assembly 
+%.o: %.asm
+	nasm $(NASM_FLAGS) $< -o $@
+
+# ===== Linking Kernel ELF =====
+$(BUILD_DIR)/kernel.bin: $(OBJECTS) $(TARGET)/linker.ld
+	mkdir -p $(BUILD_DIR)
+	ld $(LD_FLAGS) -T $(TARGET)/linker.ld -o $@ $(OBJECTS)
+
+# ===== Building GRUB ISO =====
+$(ISO_FILE): $(BUILD_DIR)/kernel.bin $(TARGET)/iso/boot/grub/grub.cfg
+	mkdir -p $(ISO_DIR)/boot
+	cp $(BUILD_DIR)/kernel.bin $(ISO_DIR)/boot/kernel.bin
+	grub-mkrescue -o $(ISO_FILE) $(ISO_DIR)
+
+
+# ===== RUN in QEMU =====
+run: $(ISO_FILE)
 	$(QEMU) $(QEMU_FLAGS)
 
-# When we don't want to use GUI (for debugging)
-run-debug: $(BOOT_BIN)
-	$(QEMU) $(QEMU_FLAGS) -nographic
-
-# Run QEMU with gdb server running on $(GDB_PORT) for better debugging
-debug: $(BOOT_BIN)
-	$(QEMU) $(QEMU_FLAGS) -gdb tcp::$(GDB_PORT) -S
-
-# Run gdb and connect to the  vnc server running on port 1234
-gdb:
-	gdb -ex "target remote localhost:$(GDB_PORT)" -ex "layout asm" 
-
-# Run with VNC (we can connect to it using a `vncviewer localhost:5900`)
-run-vnc: $(BOOT_BIN)
-	$(QEMU) $(QEMU_FLAGS) -vnc :0
+# ===== INSTALL to /boot =====
+install: $(BUILD_DIR)/kernel.bin
+	sudo cp $< /boot/arachne_x86_64.bin
+	@echo "Installed to /boot/arachne_x86_64.bin"
 
 clean:
-	rm -f $(BOOT_BIN)
+	rm -rf $(BUILD_DIR) $(SRC_DIR)/*.o src/impl/common/*.o 
