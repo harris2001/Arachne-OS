@@ -18,7 +18,13 @@ void printf(std::string_view str)
 
 extern "C" void kernel_main(void* /*multiboot_structure*/, unsigned int /*magicnumber*/)
 {
-    printf("Kernel Initialized\n");
+    // Clear screen first
+    for(size_t i = 0; i < 80 * 25; i++)
+    {
+        video_memory[i] = 0x0F20;  // space with white on black
+    }
+    
+   printf("Kernel Initialized");
 
     while (1);
     
