@@ -51,6 +51,12 @@ $(ISO_FILE): $(BUILD_DIR)/kernel.bin $(TARGET)/iso/boot/grub/grub.cfg
 run: $(ISO_FILE)
 	$(QEMU) $(QEMU_FLAGS)
 
+# ===== CI Testing =====
+test-ci: $(ISO_FILE)
+	@echo "Running headless QEMU test..."
+	timeout 10s $(QEMU) -cdrom $(ISO_FILE) -display none -serial stdio -m 512M -no-reboot -no-shutdown || true
+	@echo "CI test completed"
+
 # ===== INSTALL to /boot =====
 install: $(BUILD_DIR)/kernel.bin
 	sudo cp $< /boot/arachne_x86_64.bin
