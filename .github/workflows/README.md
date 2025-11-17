@@ -1,49 +1,28 @@
-# CI/CD Configuration
+# CI/CD Workflow
 
-## Overview
-The GitHub Actions workflow automatically builds and tests ArachneOS using Docker on every push and pull request to the `main` branch.
+Using this GitHub Actions workflow, we can automatically build and test ArachneOS whenever code is pushed from a PR and check if there are any issues introduced. We are using the Dockerfile that sets up developers' environment for consistency.
 
-## What It Does
+## How it works 
+1. Checks out the code (only on PRs to main)
+2. Builds the Docker image from `devs/Dockerfile` with all our build tools
+3. Compiles the kernel inside that container using `make all`
+4. Verifies the build outputs exist (`kernel.bin` and the bootable ISO)
+5. Tests booting in QEMU (runs for 10 seconds in headless mode)
+6. Uploads the artifacts for users to download 
 
-1. **Build Docker Image**: Creates the development environment from `devs/Dockerfile`
-2. **Build Kernel**: Compiles the kernel inside Docker container
-3. **Verify Build**: Checks that both kernel.bin and the ISO were created
-4. **Test Boot**: Runs the OS in QEMU (headless) for 10 seconds to verify it boots
-5. **Upload Artifacts**: Saves the compiled kernel and ISO for download (30 days retention)
+## Testing Locally
 
-## Docker Environment
-
-The Docker container includes:
-- `gcc-cross-x86_64-elf` - Cross-compiler toolchain
-- `nasm` - Assembly compiler
-- `xorriso` - ISO 9660 filesystem tool
-- `grub-pc-bin` & `grub-common` - GRUB bootloader
-- `qemu-system-x86` - x86_64 emulator for testing
-
-## Local Testing
-
-To test the CI locally using Docker:
+If you are a developer and want to submit a PR, you can verify your solution by running the same steps as the CI locally like this:
 
 ```bash
-# Build the Docker image
 cd devs
-docker build . -t arachne-dev
+docker build . -t dev-environment
 
-# Build the kernel
 cd ..
-docker run --rm -v $(pwd):/root/env arachne-dev make
-
-# Test in QEMU
-docker run --rm -v $(pwd):/root/env arachne-dev make test-ci
-
-# Interactive development
-docker run --rm -it -v $(pwd):/root/env arachne-dev
+docker run --rm -v $(pwd):/root/env dev-environment make all
+docker run --rm -v $(pwd):/root/env dev-environment make test-ci
 ```
 
-## Artifacts
+## Downloading Builds
 
-After each successful build, you can download:
-- `build/kernel.bin` - The compiled kernel binary
-- `build/arachne_x86_64.iso` - Bootable ISO image
-
-These are available in the Actions tab under "Artifacts" for each workflow run.
+If the CI succeeds, it uploads the compiled kernel and ISO as artifacts for users to download from the Actions tab on Github (currrently only retained for 30 days).
