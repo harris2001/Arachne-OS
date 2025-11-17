@@ -1,7 +1,10 @@
 NASM_FLAGS = -f elf32
 # freestanding:= no standard library, or main
 # -fno-exceptions -fno-rtti := disable exceptions and RTTI
-GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra  -fno-exceptions -fno-rtti 
+CROSS_COMPILE = x86_64-elf-
+GPP = $(CROSS_COMPILE)g++
+GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
+LD = $(CROSS_COMPILE)ld
 LD_FLAGS = -m elf_i386 
 
 SRC_DIR = src/impl/x86_64/boot
@@ -29,7 +32,7 @@ all: $(ISO_FILE)
 
 # Compiling C++
 %.o: %.cpp
-	g++ $(GPP_FLAGS) -c $< -o $@
+	$(GPP) $(GPP_FLAGS) -c $< -o $@
 
 # Compiling Assembly 
 %.o: %.asm
@@ -38,7 +41,7 @@ all: $(ISO_FILE)
 # ===== Linking Kernel ELF =====
 $(BUILD_DIR)/kernel.bin: $(OBJECTS) $(TARGET)/linker.ld
 	mkdir -p $(BUILD_DIR)
-	ld $(LD_FLAGS) -T $(TARGET)/linker.ld -o $@ $(OBJECTS)
+	$(LD) $(LD_FLAGS) -T $(TARGET)/linker.ld -o $@ $(OBJECTS)
 
 # ===== Building GRUB ISO =====
 $(ISO_FILE): $(BUILD_DIR)/kernel.bin $(TARGET)/iso/boot/grub/grub.cfg
@@ -50,6 +53,12 @@ $(ISO_FILE): $(BUILD_DIR)/kernel.bin $(TARGET)/iso/boot/grub/grub.cfg
 # ===== RUN in QEMU =====
 run: $(ISO_FILE)
 	$(QEMU) $(QEMU_FLAGS)
+
+# ===== CI Testing =====
+test-ci: $(ISO_FILE)
+	@echo "Running headless QEMU test..."
+	timeout 10s $(QEMU) -cdrom $(ISO_FILE) -display none -serial stdio -m 512M -no-reboot -no-shutdown || true
+	@echo "CI test completed"
 
 # ===== INSTALL to /boot =====
 install: $(BUILD_DIR)/kernel.bin

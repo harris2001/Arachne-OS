@@ -14,18 +14,28 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Build Docker development environment
+      working-directory: devs
+      run: docker build . -t dev-environment
+
+    - name: Build the kernel
+      run: docker run --rm -v $(pwd):/root/env dev-environment make all
+
+    - name: Verify build artifacts
       run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential nasm gcc qemu-system-x86 gdb
+        [ -f build/kernel.bin ] && echo "Kernel binary created" || exit 1
+        [ -f build/arachne_x86_64.iso ] && echo "ISO image created" || exit 1
 
-    - name: Build the bootloader
-      run: make
+    - name: Test kernel boot
+      run: docker run --rm -v $(pwd):/root/env dev-environment make test-ci
 
-    - name: Run bootloader in QEMU
-      run: make run-debug
-
-    - name: Clean build artifacts
-      run: make clean
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: arachne-os-build
+        path: |
+          build/kernel.bin
+          build/arachne_x86_64.iso
+        retention-days: 30

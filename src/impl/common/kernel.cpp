@@ -3,14 +3,14 @@
  * It initializes the system, sets up hardware, and starts the main loop.
  */
 
-#include <string_view>
-#include <stdint.h>       // for uint16_t
+typedef unsigned int size_t;
+typedef unsigned short uint16_t;
 
 static volatile uint16_t* const video_memory = (uint16_t*)0xb8000;
 
-void printf(std::string_view str)
+void printf(const char* str)
 {
-    for(size_t i = 0; i < str.size(); i++)
+    for(size_t i = 0; str[i] != '\0'; i++)
     {
         video_memory[i] = 0x0F00 | str[i];  // 0x0F = white on black
     }
@@ -24,7 +24,7 @@ extern "C" void kernel_main(void* /*multiboot_structure*/, unsigned int /*magicn
         video_memory[i] = 0x0F20;  // space with white on black
     }
     
-   printf("Kernel Initialized");
+    printf("Kernel Initialized");
 
     while (1);
     
