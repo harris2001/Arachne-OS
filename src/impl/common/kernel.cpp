@@ -3,8 +3,7 @@
  * It initializes the system, sets up hardware, and starts the main loop.
  */
 
-typedef unsigned int size_t;
-typedef unsigned short uint16_t;
+#include <libk/types.h>
 
 static volatile uint16_t* const video_memory = (uint16_t*)0xb8000;
 
