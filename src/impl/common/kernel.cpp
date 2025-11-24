@@ -3,7 +3,7 @@
  * It initializes the system, sets up hardware, and starts the main loop.
  */
 
-#include <libk/types.h>
+#include <libk/stdint.hpp>
 
 static volatile uint16_t* const video_memory = (uint16_t*)0xb8000;
 

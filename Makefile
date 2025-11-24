@@ -1,10 +1,10 @@
 NASM_FLAGS = -f elf32
 # freestanding:= no standard library, or main
 # -fno-exceptions -fno-rtti := disable exceptions and RTTI
-CROSS_COMPILE = x86_64-elf-
-GPP = $(CROSS_COMPILE)g++
+CROSS_COMPILE = x86_64-
+GPP = $(CROSS_COMPILE)linux-gnu-g++
 GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
-LD = $(CROSS_COMPILE)ld
+LD = $(CROSS_COMPILE)elf-ld
 LD_FLAGS = -m elf_i386 
 
 SRC_DIR = src/impl/x86_64/boot
@@ -53,6 +53,10 @@ $(ISO_FILE): $(BUILD_DIR)/kernel.bin $(TARGET)/iso/boot/grub/grub.cfg
 # ===== RUN in QEMU =====
 run: $(ISO_FILE)
 	$(QEMU) $(QEMU_FLAGS)
+
+# Run QEMU in headless mode (for Docker/SSH environments)
+run-headless: $(ISO_FILE)
+	$(QEMU) $(QEMU_FLAGS) -display none -serial stdio
 
 # ===== CI Testing =====
 test-ci: $(ISO_FILE)
