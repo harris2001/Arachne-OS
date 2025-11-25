@@ -1,10 +1,9 @@
 NASM_FLAGS = -f elf32
 # freestanding:= no standard library, or main
 # -fno-exceptions -fno-rtti := disable exceptions and RTTI
-CROSS_COMPILE = x86_64-
-GPP = $(CROSS_COMPILE)linux-gnu-g++
+GPP = g++
 GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
-LD = $(CROSS_COMPILE)elf-ld
+LD = ld
 LD_FLAGS = -m elf_i386 
 
 SRC_DIR = src/impl/x86_64/boot
@@ -12,9 +11,9 @@ BUILD_DIR = build
 TARGET = targets/x86_64
 
 ISO_DIR = $(TARGET)/iso
-ISO_FILE = $(BUILD_DIR)/arachne_x86_64.iso
+ISO_FILE = $(BUILD_DIR)/arachne_i686.iso
 
-QEMU = qemu-system-x86_64
+QEMU = qemu-system-i386
 QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown 
 
 # Source files
