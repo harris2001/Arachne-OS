@@ -26,7 +26,7 @@ jobs:
     - name: Verify build artifacts
       run: |
         [ -f build/kernel.bin ] && echo "Kernel binary created" || exit 1
-        [ -f build/arachne_x86_64.iso ] && echo "ISO image created" || exit 1
+        [ -f build/arachne_i686.iso ] && echo "ISO image created" || exit 1
 
     - name: Test kernel boot
       run: docker run --rm -v $(pwd):/root/env dev-environment make test-ci
@@ -37,5 +37,5 @@ jobs:
         name: arachne-os-build
         path: |
           build/kernel.bin
-          build/arachne_x86_64.iso
+          build/arachne_i686.iso
         retention-days: 30
