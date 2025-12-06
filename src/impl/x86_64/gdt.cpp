@@ -1,11 +1,14 @@
 #include "gdt.hpp"
 
+namespace arachne {
+namespace x86 {
+
 // Loading GDT in assembly
-extern "C" void gdt_flush(unsigned int);
+extern "C" void gdt_flush(uint32_t);
 
 GDT::GDT() {
     gdtr.limit = (sizeof(gdt_entry) * GDT_ENTRIES) - 1;
-    gdtr.base = (unsigned int)&gdt;
+    gdtr.base = (uint32_t)&gdt;
 
     // Null descriptor
     set_gate(0, 0, 0, 0, 0);
@@ -19,14 +22,12 @@ GDT::GDT() {
     set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xA0);
 
     // Load the GDT
-    gdt_flush((unsigned int)&gdtr);
+    gdt_flush((uint32_t)&gdtr);
 }
   
-GDT::~GDT() {
-    //Log Destructor called
-}
+GDT::~GDT() = default; 
 
-// FOr reference: https://wiki.osdev.org/Global_Descriptor_Table
+// For reference: https://wiki.osdev.org/Global_Descriptor_Table
 void GDT::set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags) {
     gdt[idx].base_low = (base & 0xFFFF);
     gdt[idx].base_middle = (base >> 16) & 0xFF;
@@ -38,3 +39,6 @@ void GDT::set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8
     gdt[idx].granularity |= (flags & 0xF0);
     gdt[idx].access = access;
 }
+
+} // namespace x86
+} // namespace arachne

@@ -1,11 +1,16 @@
 #pragma once
 
+#include "../common/libk/stdint.hpp"
+
 /*
     * Global Descriptor Table (GDT) implementation for x86_64 architecture.
     * This class sets up the GDT with standard segments for kernel and user modes.
     *
     * Note: We will still need to implement paging for an x86_64 OS to function properly.
 */
+
+namespace arachne {
+namespace x86 {
 
 class GDT {
     public:
@@ -25,7 +30,7 @@ class GDT {
 
         struct gdt_ptr {
             uint16_t limit;
-            unsigned int base;
+            uint32_t base;
         } __attribute__((packed));
 
         static const int GDT_ENTRIES = 5; // Null, Code, Data, User Code, User Data
@@ -34,6 +39,9 @@ class GDT {
 
         void set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags);
 
-        void load_gdt(unsigned int gdtr_address);
+        void load_gdt(uint32_t gdtr_address);
    
 };
+
+} // namespace x86
+} // namespace arachne
