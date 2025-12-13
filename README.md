@@ -43,22 +43,58 @@
 - Languages: C++, x86-64 Assembly
 - Platform: Bare-metal, QEMU-compatible x86
 - Build System: Make, NASM, LD
+- Architecture: Modular design supporting multiple architectures (currently x86_64)
+
 ---
 
 ## Getting Started
 
 ### Requirements
 
-- Cross-compiler toolchain for x86_64
-- QEMU or real hardware (`qemu-system-x86_64`)
-- `make`, `nasm`, `ld`, `gcc`, `grub-pc-bin`, `xorriso` 
+- GCC/G++ compiler (`gcc`, `g++`)
+- NASM assembler
+- GNU Linker (`ld`)
+- GRUB utilities (`grub-mkrescue`, `grub-pc-bin`)
+- xorriso (for ISO creation)
+- QEMU (`qemu-system-i386` or `qemu-system-x86_64`)
 
 ### Build & Run
 
 ```bash
+# Clone the repository
 git clone https://github.com/harris2001/Arachne
+cd Arachne
+
+# Build for default architecture (x86_64)
 make
+
+# Or specify architecture explicitly
+make ARCH=x86_64
+
+# Run in QEMU (opens graphical window)
+make run
 vncviewer localhost:5900
+
+# Run in headless mode with serial output
+make run-headless
+
+# View build configuration
+make info
+
+# Clean build artifacts
+make clean
+```
+
+### Supported Architectures
+
+- **x86_64** (default) - 32-bit protected mode, i686 target
+- More architectures coming soon: ARM, RISC-V
+
+### Testing
+
+```bash
+# Run automated CI test
+make test-ci
 ```
 
 ## Project Layout
