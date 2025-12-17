@@ -1,9 +1,8 @@
 #pragma once
 
 #include "../common/arch/arch.hpp"
-#include "gdt.hpp"
 
-namespace arachne {
+namespace Arachne {
 namespace x86 {
 
 /**
@@ -15,9 +14,8 @@ public:
     X86Arch();
     ~X86Arch() override;
 
-    // Initialize x86-specific features
-    void init() override;
+    void init() final;  // Implementation moved to .cpp for debug output
 };
 
 } // namespace x86
-} // namespace arachne
+} // namespace Arachne

@@ -32,7 +32,7 @@ To add support for a new architecture (e.g., ARM), follow these steps:
    #pragma once
    #include "../common/arch/arch.hpp"
    
-   namespace arachne {
+   namespace Arachne {
    namespace arm {
        class ARMArch : public Arch {
        public:
@@ -46,7 +46,7 @@ To add support for a new architecture (e.g., ARM), follow these steps:
    // arm_arch.cpp
    #include "arm_arch.hpp"
    
-   namespace arachne {
+   namespace Arachne {
    namespace arm {
        ARMArch::ARMArch() = default;
        ARMArch::~ARMArch() = default;

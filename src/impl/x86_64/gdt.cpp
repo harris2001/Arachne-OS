@@ -1,6 +1,6 @@
 #include "gdt.hpp"
 
-namespace arachne {
+namespace Arachne {
 namespace x86 {
 
 // Loading GDT in assembly
@@ -41,4 +41,4 @@ void GDT::set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8
 }
 
 } // namespace x86
-} // namespace arachne
+} // namespace Arachne

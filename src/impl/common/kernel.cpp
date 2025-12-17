@@ -4,6 +4,7 @@
  */
 
 #include <libk/stdint.hpp>
+#include "arch/arch.hpp"
 
 static volatile uint16_t* const video_memory = (uint16_t*)0xb8000;
 
@@ -17,14 +18,9 @@ void printf(const char* str)
 
 extern "C" void kernel_main(void* /*multiboot_structure*/, unsigned int /*magicnumber*/)
 {
-    // Clear screen first
-    for(size_t i = 0; i < 80 * 25; i++)
-    {
-        video_memory[i] = 0x0F20;  // space with white on black
-    }
-    
-    printf("Kernel Initialized");
-
+    printf("\n\n\n\n\nKernel Initialized\n");
+    Arachne::Arch& arch = Arachne::Arch::get_instance();
+    arch.init();
     while (1);
     
 }

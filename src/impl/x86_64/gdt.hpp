@@ -9,7 +9,7 @@
     * Note: We will still need to implement paging for an x86_64 OS to function properly.
 */
 
-namespace arachne {
+namespace Arachne {
 namespace x86 {
 
 class GDT {
@@ -44,4 +44,4 @@ class GDT {
 };
 
 } // namespace x86
-} // namespace arachne
+} // namespace Arachne

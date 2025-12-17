@@ -11,7 +11,7 @@
  *   arch.init();
  */
 
-namespace arachne {
+namespace Arachne {
 
 class Arch {
 public:
@@ -32,4 +32,4 @@ protected:
     Arch& operator=(const Arch&) = delete;
 };
 
-} // namespace arachne
+} // namespace Arachne
