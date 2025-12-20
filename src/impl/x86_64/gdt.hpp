@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../common/libk/stdint.hpp"
+#include "../common/libk/stdtypes.hpp"
 
 /*
     * Global Descriptor Table (GDT) implementation for x86_64 architecture.

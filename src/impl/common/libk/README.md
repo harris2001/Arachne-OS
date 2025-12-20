@@ -3,4 +3,5 @@
 This folder contains a minimal implementation of the C++ standard library necessary for the developemnt of the Arachne kernel.
 
 ## Library Components
-- **stdint**: Definitions for fixed-width integer types.
+- **stdtypes**: Definitions for fixed-width integer types.
+- **stdio**: Basic input/output functions (e.g., `printf`, `puts`).
