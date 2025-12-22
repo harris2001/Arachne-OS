@@ -3,16 +3,24 @@
  * It initializes the system, sets up hardware, and starts the main loop.
  */
 
-#include "libk/stdio.hpp"
 #include "arch/arch.hpp"
-
+#include "libk/stdio.hpp"
 
 extern "C" void kernel_main(void* /*multiboot_structure*/, unsigned int /*magicnumber*/)
 {
+    // Initialize VGA display
+    std::vga::init();
+
+    // Initialize architecture
     Arachne::Arch& arch = Arachne::Arch::get_instance();
     arch.init();
-    printf("\n\n\n\n\nKernel Initialized\n");
-    // while (1);
-    
-}
 
+    // Print welcome message
+    std::io::println("ArachneOS - Minimal Kernel");
+    std::io::println("Architecture initialized successfully");
+
+    // Halt CPU
+    while (1) {
+        __asm__ volatile("hlt");
+    }
+}
