@@ -38,13 +38,14 @@ QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown
 # Common kernel objects (architecture-independent)
 COMMON_OBJECTS = \
     src/impl/common/kernel.o \
-    src/impl/common/cxx_runtime.o
+    src/impl/common/cxx_runtime.o \
+    src/impl/common/libk/stdio.o
 
 # All object files
 OBJECTS = $(BOOT_OBJECTS) $(COMMON_OBJECTS) $(ARCH_OBJECTS)
 
 # Default target
-.PHONY: all clean run iso install
+.PHONY: all clean run iso install format format-check info
 
 all: $(ISO_FILE)
 
@@ -101,6 +102,17 @@ clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf $(BUILD_DIR) src/impl/*/boot/*.o src/impl/common/*.o src/impl/*/*.o
 	@echo "Clean complete"
+
+# ===== Code Formatting =====
+format:
+	@echo "Formatting source files..."
+	@find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format -i
+	@echo "Formatting complete"
+
+format-check:
+	@echo "Checking code formatting..."
+	@find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format --dry-run --Werror
+	@echo "✓ All files are properly formatted"
 
 # Print current configuration
 info:

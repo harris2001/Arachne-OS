@@ -5,15 +5,16 @@ Language: Cpp
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
-NamespaceIndentation: None
+NamespaceIndentation: None 
 IndentCaseLabels: true
 IndentPPDirectives: BeforeHash
+AccessModifierOffset: -4
 
 # Line length
 ColumnLimit: 120
 
 # Braces
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Linux 
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: Never
@@ -21,7 +22,7 @@ AllowShortLoopsOnASingleLine: false
 
 # Spacing
 SpaceBeforeParens: ControlStatements
-SpaceBeforeTrailingComments: 2
+SpacesBeforeTrailingComments: 2
 SpacesInAngles: Never
 SpacesInContainerLiterals: false
 SpaceAfterCStyleCast: false
