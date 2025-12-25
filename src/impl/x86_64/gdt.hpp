@@ -20,6 +20,11 @@ public:
     GDT();
     ~GDT();
 
+    struct gdt_ptr {
+        uint16_t limit;
+        uint32_t base;
+    } __attribute__((packed));
+
 private:
     struct gdt_entry {
         uint16_t limit_low;
@@ -31,13 +36,8 @@ private:
         uint8_t base_high;
     } __attribute__((packed));
 
-    struct gdt_ptr {
-        uint16_t limit;
-        uint32_t base;
-    } __attribute__((packed));
-
     static const int GDT_ENTRIES = 5;  // Null, Code, Data, User Code, User Data
-    gdt_entry gdt[GDT_ENTRIES];
+    gdt_entry entries[GDT_ENTRIES];
     gdt_ptr gdtr;
 
     void set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags);
