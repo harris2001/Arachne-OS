@@ -11,7 +11,7 @@
 
 namespace Arachne
 {
-namespace x86
+namespace x86_64
 {
 
 class GDT
@@ -45,5 +45,5 @@ private:
     void load_gdt(uint32_t gdtr_address);
 };
 
-}  // namespace x86
+}  // namespace x86_64
 }  // namespace Arachne

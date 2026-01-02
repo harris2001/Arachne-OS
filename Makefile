@@ -20,7 +20,7 @@ ifeq ($(ARCH),x86_64)
     ARCH_OBJECTS = \
         $(ARCH_IMPL_DIR)/gdt.o \
         $(ARCH_IMPL_DIR)/gdt_asm.o \
-        $(ARCH_IMPL_DIR)/x86_arch.o
+        $(ARCH_IMPL_DIR)/x86_64_arch.o
     
     BOOT_OBJECTS = \
         $(ARCH_BOOT_DIR)/header.o \

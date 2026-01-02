@@ -2,7 +2,7 @@
 
 namespace Arachne
 {
-namespace x86
+namespace x86_64
 {
 
 // Loading GDT in assembly
@@ -44,5 +44,5 @@ void GDT::set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8
     entries[idx].access = access;
 }
 
-}  // namespace x86
+}  // namespace x86_64
 }  // namespace Arachne

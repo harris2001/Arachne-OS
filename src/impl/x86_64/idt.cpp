@@ -2,8 +2,8 @@
 
 namespace Arachne
 {
-namespace x86
+namespace x86_64
 {
 
-}  // namespace x86
+}  // namespace x86_64
 }  // namespace Arachne
