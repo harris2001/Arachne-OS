@@ -23,6 +23,8 @@ GDT::GDT()
     set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xC0);
     // User Data Segment
     set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xC0);
+    // TSS Segment
+    write_tss(5, 0x10, 0x0);  // Ring 0 stack segment selector is 0x10 (Kernel Data Segment) 
 
     // Load the GDT
     gdt_flush(&gdtr);
