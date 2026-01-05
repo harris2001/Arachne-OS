@@ -1,4 +1,5 @@
 #include "gdt.hpp"
+#include "../common/libk/memutils.hpp"
 
 namespace Arachne
 {
@@ -16,15 +17,20 @@ GDT::GDT()
     // Null descriptor
     set_gate(0, 0, 0, 0, 0);
     // Kernel Code Segment (0xC0 = 32-bit, 4KB granularity)
+    // 1001 1010
     set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xC0);
     // Kernel Data Segment
+    // 1001 0010
     set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xC0);
     // User Code Segment
+    // 1111 1010
     set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xC0);
     // User Data Segment
+    // 1111 0010
     set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xC0);
     // TSS Segment
-    write_tss(5, 0x10, 0x0);  // Ring 0 stack segment selector is 0x10 (Kernel Data Segment) 
+    // Ring 0 stack segment selector is 0x10 (Kernel Data Segment) 
+    write_tss(5, 0x10, 0x0);
 
     // Load the GDT
     gdt_flush(&gdtr);
@@ -51,12 +57,12 @@ void GDT::write_tss(int idx, uint32_t ss0, uint32_t esp0)
     tss_entry* tss = reinterpret_cast<tss_entry*>(&entries[idx]);
 
     // Clear out the TSS
-    memset(tss, 0, sizeof(tss_entry));
+    std::memset(tss, 0, sizeof(tss_entry));
 
     tss->SS0 = ss0;
     tss->ESP0 = esp0;
 
-    uint32_t base = reinterpret_cast<uint32_t>(tss);
+    uintptr_t base = reinterpret_cast<uintptr_t>(tss);
     uint32_t limit = sizeof(tss_entry);
 
     set_gate(idx, base, limit, 0x89, 0x00);  // Access byte: Present, Ring 0, TSS (0x89)
