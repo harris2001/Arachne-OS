@@ -2,12 +2,17 @@
 # Override with: make ARCH=x86_64
 # Supported architectures: x86
 ARCH ?= x86
+DEBUG ?= 1
 
 # Architecture-specific settings
 ifeq ($(ARCH),x86)
     NASM_FLAGS = -f elf32
     GPP = g++
     GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
+	ifeq ($(DEBUG),1)
+		GPP_FLAGS += -g -DDEBUG
+	else
+		GPP_FLAGS += -DNDEBUG
     LD = ld
     LD_FLAGS = -m elf_i386
     QEMU = qemu-system-i386

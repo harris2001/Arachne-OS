@@ -17,14 +17,10 @@ void* memset(void* dest, int val, size_t len)
     //     throw std::out_of_range("memset: out of range");
     // }
 
-    std::io::println("Passed checks");
     unsigned char* ptr = static_cast<unsigned char*>(dest);
-    std::io::println("Before memset");
     for (size_t i = 0; i < len; ++i) {
         ptr[i] = static_cast<unsigned char>(val);
-        std::io::println("During memset");
     }
-    std::io::println("After memset");
     return dest;
 }
 
