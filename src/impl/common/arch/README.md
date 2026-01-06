@@ -7,11 +7,11 @@ This directory contains the architecture abstraction layer for ArachneOS. The de
 The kernel automatically uses the correct architecture implementation at build time. To build for a specific architecture:
 
 ```bash
-# Build for x86_64 (default)
+# Build for x86 (default)
 make
 
-# Build for x86_64 (explicit)
-make ARCH=x86_64
+# Build for x86 (explicit)
+make ARCH=x86
 
 # Future: Build for ARM
 # make ARCH=arm

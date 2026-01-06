@@ -19,6 +19,7 @@ void init()
     cursor_x = 0;
     cursor_y = 0;
     clear();
+    io::println("VGA initialized, cursor at (0,0)");
 }
 
 void clear()

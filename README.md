@@ -40,10 +40,10 @@
 
 ## Technologies
 
-- Languages: C++, x86-64 Assembly
+- Languages: C++, x86 Assembly
 - Platform: Bare-metal, QEMU-compatible x86
 - Build System: Make, NASM, LD
-- Architecture: Modular design supporting multiple architectures (currently x86_64)
+- Architecture: Modular design supporting multiple architectures (currently x86)
 
 ---
 
@@ -56,7 +56,7 @@
 - GNU Linker (`ld`)
 - GRUB utilities (`grub-mkrescue`, `grub-pc-bin`)
 - xorriso (for ISO creation)
-- QEMU (`qemu-system-i386` or `qemu-system-x86_64`)
+- QEMU (`qemu-system-i386` or `qemu-system-x86`)
 
 ### Build & Run
 
@@ -65,11 +65,11 @@
 git clone https://github.com/harris2001/Arachne
 cd Arachne
 
-# Build for default architecture (x86_64)
+# Build for default architecture (x86)
 make
 
 # Or specify architecture explicitly
-make ARCH=x86_64
+make ARCH=x86
 
 # Run in QEMU (opens graphical window)
 make run
@@ -87,7 +87,7 @@ make clean
 
 ### Supported Architectures
 
-- **x86_64** (default) - 32-bit protected mode, i686 target
+- **x86** (default) - 32-bit protected mode, i686 target
 - More architectures coming soon: ARM, RISC-V
 
 ### Testing
@@ -106,10 +106,10 @@ Arachne/
 ├── icons/               # Project icons and logos 
 ├── src/                 # Source code
 │   ├── impl/            # Architecture-specific code
-│   │   └── x86_64       # x86_64 implementation
+│   │   └── x86       # x86 implementation
 │   └── common/          # Architecture-independent code
 ├── targets/             # Build targets and configurations
-│   └── x86_64/          # x86_64 target configuration
+│   └── x86/          # x86 target configuration
 ├── kernel/              # Scheduler, memory, syscalls
 ├── drivers/             # Basic device drivers
 ├── libs/                # Standard libraries and helpers

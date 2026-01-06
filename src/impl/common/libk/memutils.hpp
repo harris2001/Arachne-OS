@@ -4,7 +4,7 @@ namespace std
 {
 
 /*
- * Sets the first 'len' bytes to 'val' 
+ * Sets the first 'len' bytes to 'val'
  *
  * !WARNING! : This function does not handle misaligned memory accesses.
  *
@@ -15,7 +15,7 @@ namespace std
  */
 void* memset(void* dest, int val, size_t len);
 
-/* 
+/*
  * Copies 'len' bytes from memory src to dest.
  * The memory areas must not overlap otherwise an exception is thrown.
  *
@@ -32,7 +32,7 @@ void* memcpy(void* dest, const void* src, size_t len);
  * @param p1 : Pointer to the first memory area.
  * @param p2 : Pointer to the second memory area.
  * @param n  : Number of bytes to compare.
- * @return An integer less than, equal to, or greater than zero (p1 < p2, p1 == p2, p1 > p2). 
+ * @return An integer less than, equal to, or greater than zero (p1 < p2, p1 == p2, p1 > p2).
  */
 int memcmp(const void* s1, const void* s2, size_t n);
 

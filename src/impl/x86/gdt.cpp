@@ -1,9 +1,10 @@
 #include "gdt.hpp"
+
 #include "../common/libk/memutils.hpp"
 
 namespace Arachne
 {
-namespace x86_64
+namespace x86
 {
 
 // Loading GDT in assembly
@@ -29,7 +30,7 @@ GDT::GDT()
     // 1111 0010
     set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xC0);
     // TSS Segment
-    // Ring 0 stack segment selector is 0x10 (Kernel Data Segment) 
+    // Ring 0 stack segment selector is 0x10 (Kernel Data Segment)
     write_tss(5, 0x10, 0x0);
 
     // Load the GDT
@@ -54,10 +55,13 @@ void GDT::set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8
 
 void GDT::write_tss(int idx, uint32_t ss0, uint32_t esp0)
 {
+    std::io::println("Now writing");
     tss_entry* tss = reinterpret_cast<tss_entry*>(&entries[idx]);
 
+    std::io::println("Before memset");
     // Clear out the TSS
     std::memset(tss, 0, sizeof(tss_entry));
+    std::io::println("After memset");
 
     tss->SS0 = ss0;
     tss->ESP0 = esp0;
@@ -65,8 +69,9 @@ void GDT::write_tss(int idx, uint32_t ss0, uint32_t esp0)
     uintptr_t base = reinterpret_cast<uintptr_t>(tss);
     uint32_t limit = sizeof(tss_entry);
 
+    std::io::println("About to set gate");
     set_gate(idx, base, limit, 0x89, 0x00);  // Access byte: Present, Ring 0, TSS (0x89)
 }
 
-}  // namespace x86_64
+}  // namespace x86
 }  // namespace Arachne

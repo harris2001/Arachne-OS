@@ -1,10 +1,10 @@
-#include "x86_64_arch.hpp"
+#include "x86_arch.hpp"
 
 #include "gdt.hpp"
 
 namespace Arachne
 {
-namespace x86_64
+namespace x86
 {
 
 // Serial debug output
@@ -28,17 +28,17 @@ void serial_debug_arch(const char* str)
     }
 }
 
-X86_64_Arch::X86_64_Arch() = default;
-X86_64_Arch::~X86_64_Arch() = default;
+X86_Arch::X86_Arch() = default;
+X86_Arch::~X86_Arch() = default;
 
-void X86_64_Arch::init()
+void X86_Arch::init()
 {
-    serial_debug_arch("[X86_64_Arch] init() called, about to create GDT\n");
+    serial_debug_arch("[X86_Arch] init() called, about to create GDT\n");
     static GDT gdt_instance;
-    serial_debug_arch("[X86_64_Arch] GDT instance created, init() done\n");
+    serial_debug_arch("[X86_Arch] GDT instance created, init() done\n");
 }
 
-}  // namespace x86_64
+}  // namespace x86
 }  // namespace Arachne
 
 namespace Arachne
@@ -46,7 +46,7 @@ namespace Arachne
 
 Arch& Arch::get_instance()
 {
-    static x86_64::X86_64_Arch instance;
+    static x86::X86_Arch instance;
     return instance;
 }
 

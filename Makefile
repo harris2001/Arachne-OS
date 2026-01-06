@@ -1,10 +1,10 @@
 # ===== Architecture Configuration =====
 # Override with: make ARCH=x86_64
-# Supported architectures: x86_64
-ARCH ?= x86_64
+# Supported architectures: x86
+ARCH ?= x86
 
 # Architecture-specific settings
-ifeq ($(ARCH),x86_64)
+ifeq ($(ARCH),x86)
     NASM_FLAGS = -f elf32
     GPP = g++
     GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
@@ -20,13 +20,13 @@ ifeq ($(ARCH),x86_64)
     ARCH_OBJECTS = \
         $(ARCH_IMPL_DIR)/gdt.o \
         $(ARCH_IMPL_DIR)/gdt_asm.o \
-        $(ARCH_IMPL_DIR)/x86_64_arch.o
+        $(ARCH_IMPL_DIR)/x86_arch.o
     
     BOOT_OBJECTS = \
         $(ARCH_BOOT_DIR)/header.o \
         $(ARCH_BOOT_DIR)/loader.o
 else
-    $(error Unsupported architecture: $(ARCH). Supported: x86_64)
+    $(error Unsupported architecture: $(ARCH). Supported: x86)
 endif
 
 BUILD_DIR = build
@@ -39,7 +39,8 @@ QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown
 COMMON_OBJECTS = \
     src/impl/common/kernel.o \
     src/impl/common/cxx_runtime.o \
-    src/impl/common/libk/stdio.o
+    src/impl/common/libk/stdio.o \
+	src/impl/common/libk/memutils.o
 
 # All object files
 OBJECTS = $(BOOT_OBJECTS) $(COMMON_OBJECTS) $(ARCH_OBJECTS)
@@ -55,9 +56,13 @@ all: $(ISO_FILE)
 %.o: %.cpp
 	$(GPP) $(GPP_FLAGS) -c $< -o $@
 
-# Compiling Assembly 
+# Compiling Assembly (default 32-bit)
 %.o: %.asm
 	nasm $(NASM_FLAGS) $< -o $@
+
+# Boot assembly files must be 32-bit for multiboot/GRUB compatibility
+$(ARCH_BOOT_DIR)/%.o: $(ARCH_BOOT_DIR)/%.asm
+	nasm -f elf32 $< -o $@
 
 # Special rule for GDT assembly (gdt.asm -> gdt_asm.o to avoid conflict with gdt.cpp)
 $(ARCH_IMPL_DIR)/gdt_asm.o: $(ARCH_IMPL_DIR)/gdt.asm
@@ -95,12 +100,12 @@ test-ci: $(ISO_FILE)
 
 # ===== INSTALL to /boot =====
 install: $(BUILD_DIR)/kernel.bin
-	sudo cp $< /boot/arachne_x86_64.bin
-	@echo "Installed to /boot/arachne_x86_64.bin"
+	sudo cp $< /boot/arachne_$(ARCH).bin
+	@echo "Installed to /boot/arachne_$(ARCH).bin"
 
 clean:
 	@echo "Cleaning build artifacts..."
-	rm -rf $(BUILD_DIR) src/impl/*/boot/*.o src/impl/common/*.o src/impl/*/*.o
+	rm -rf $(BUILD_DIR) src/impl/*/boot/*.o src/impl/common/*.o src/impl/*/*.o src/impl/common/libk/*.o
 	@echo "Clean complete"
 
 # ===== Code Formatting =====
