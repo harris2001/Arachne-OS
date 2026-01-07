@@ -8,11 +8,12 @@ DEBUG ?= 1
 ifeq ($(ARCH),x86)
     NASM_FLAGS = -f elf32
     GPP = g++
-    GPP_FLAGS = -m32 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
+    GPP_FLAGS = -m32 -ffreestanding -O0 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
 	ifeq ($(DEBUG),1)
 		GPP_FLAGS += -g -DDEBUG
 	else
 		GPP_FLAGS += -DNDEBUG
+	endif
     LD = ld
     LD_FLAGS = -m elf_i386
     QEMU = qemu-system-i386
@@ -96,6 +97,12 @@ run: $(ISO_FILE)
 # Run QEMU in headless mode (for Docker/SSH environments)
 run-headless: $(ISO_FILE)
 	$(QEMU) $(QEMU_FLAGS) -display none -serial stdio
+
+# Debugging with GDB
+# Run QEMU with -s -S flags and connect GDB to localhost:1234
+run-gdb: $(ISO_FILE)
+	$(QEMU) $(QEMU_FLAGS) -s -S
+# Need to use: gdb -ex "target remote localhost:1234" build/kernel.bin
 
 # ===== CI Testing =====
 test-ci: $(ISO_FILE)
