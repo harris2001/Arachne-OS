@@ -1,5 +1,6 @@
 #include "memutils.hpp"
-#include "exceptions.hpp" 
+
+#include "exceptions.hpp"
 #include "stdio.hpp"
 
 #define MEMORY_LIMIT 0xFFFFFFFF
@@ -38,9 +39,12 @@ void* memcpy(void* dest, const void* src, size_t len)
 
     unsigned char* d = static_cast<unsigned char*>(dest);
     const unsigned char* s = static_cast<const unsigned char*>(src);
+    std::io::println("Starting memcpy");
     for (size_t i = 0; i < len; ++i) {
         d[i] = s[i];
+        std::io::println("Copying byte");
     }
+    std::io::println("memcpy done");
     return dest;
 }
 
@@ -49,7 +53,7 @@ int memcmp(const void* s1, const void* s2, size_t n)
     // if(s1 == nullptr || s2 == nullptr){
     //     throw std::invalid_argument("memcmp: null pointer argument");
     // }
-    if(n == 0){
+    if (n == 0) {
         return 0;
     }
 
@@ -62,4 +66,4 @@ int memcmp(const void* s1, const void* s2, size_t n)
     }
     return 0;
 }
-}
+}  // namespace std

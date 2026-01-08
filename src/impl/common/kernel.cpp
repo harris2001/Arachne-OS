@@ -8,16 +8,45 @@
 
 extern "C" void kernel_main(void* /*multiboot_structure*/, unsigned int /*magicnumber*/)
 {
-    // Initialize VGA display
-    std::vga::init();
-
-    // Initialize architecture
+    // Initialize architecture FIRST (sets up GDT, which is needed for memory access)
     Arachne::Arch& arch = Arachne::Arch::get_instance();
     arch.init();
 
-    // Print welcome message
-    std::io::println("ArachneOS - Minimal Kernel");
-    std::io::println("Architecture initialized successfully");
+    // Now initialize VGA display (after GDT is set up)
+    std::vga::init();
+
+    std::io::println("Booting ArachneOS Minimal Kernel...");
+    std::io::println("");
+    std::io::println("                                                                       ");
+    std::io::println("                                .              ..                      ");
+    std::io::println("                             .--.              .--.                    ");
+    std::io::println("                           .=#=                 .-#=.                  ");
+    std::io::println("                         .-%#.       .    .       .#%=.                ");
+    std::io::println("                         =@%.   .. .=-    :+..     .#@+                ");
+    std::io::println("                         .%@+ . . .%%.:==:.*%: .   -@@.                ");
+    std::io::println("                          :@@:..  .%@%@@@@@%@: ....%@-                 ");
+    std::io::println("                           -#@%*-. :%@@@@@@@:..-+#@#=.                 ");
+    std::io::println("                             .:+#@%+=%@@@@@++#@%+-.                    ");
+    std::io::println("                        :---===++*@@@@@@@@@@@@*+++===--:.              ");
+    std::io::println("                      .=@@*++=--=*%@@@@@@@@@%@*+--==+*%@*.             ");
+    std::io::println("                     .#@+. ..-*@#=-#@@@@@@@@%-=#@#=.. .=@%:            ");
+    std::io::println("                    -%#:  .#@%=...%@@@@@@@@@@@. .=#@%:  .#@=.          ");
+    std::io::println("                   .*@.   :@@... :@@@@@@@@@@@@-.  .%@=   .%%.          ");
+    std::io::println("                    .@.   -@*  . .#@@@@@@@@@@%..   +@+   .%:           ");
+    std::io::println("                     --   =@=   . .#@@@@@@@@#.     :@*   .=            ");
+    std::io::println("                     ..   .=%=.   ..-#@@@@#=.     -%+.   ..            ");
+    std::io::println("                            .**.      .==.      .+*:                   ");
+    std::io::println("                              :=:              .=:.                    ");
+    std::io::println("                                ..            .:.                      ");
+    std::io::println("                                                                       ");
+    std::io::println("            @@@    =@@@@@-     +@*   =@@@@+  #@   @#  :@@  *@:  *@@@@= ");
+    std::io::println("           =@:@*   +@-  @*    +@@*   @%..*%  #@   @#  :@@% #@:      %# ");
+    std::io::println("           #% *%   +@+  @*   +@-@*   @%      #@%##@#  :@#%*#@:   -#%@= ");
+    std::io::println("          :@#=*@-  +@%#@@   +@+ @#   @%      #@   @#  :@*-@@@:   :--@* ");
+    std::io::println("          +@* *@*  +@-  @:  #%%%@@=  @@--#@  #@   @#  :@* +@@:      @# ");
+    std::io::println("          *#   +#  =%-  #+      #+   -#%%%=  #%   #*  :@+  #@.  =%@@%: ");
+    std::io::println("");
+    std::io::println("");
 
     // Halt CPU
     while (1) {
