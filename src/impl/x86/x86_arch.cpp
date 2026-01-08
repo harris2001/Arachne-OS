@@ -36,6 +36,7 @@ void X86_Arch::init()
     serial_debug_arch("[X86_Arch] init() called, about to create GDT\n");
     static GDT gdt_instance;
     serial_debug_arch("[X86_Arch] GDT instance created, init() done\n");
+    std::io::println("Architecture initialized successfully");
 }
 
 }  // namespace x86

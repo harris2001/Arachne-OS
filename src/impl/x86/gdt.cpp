@@ -9,11 +9,16 @@ namespace x86
 
 // Loading GDT in assembly
 extern "C" void gdt_flush(GDT::gdt_ptr*);
+extern void serial_debug_arch(const char*);
 
 GDT::GDT()
 {
+    serial_debug_arch("[GDT] Constructor started\n");
+
     gdtr.limit = (sizeof(gdt_entry) * GDT_ENTRIES) - 1;
     gdtr.base = reinterpret_cast<uintptr_t>(&entries);
+
+    serial_debug_arch("[GDT] Setting up descriptors\n");
 
     // Null descriptor
     set_gate(0, 0, 0, 0, 0);
@@ -29,12 +34,16 @@ GDT::GDT()
     // User Data Segment
     // 1111 0010
     set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xC0);
+
     // TSS Segment
     // Ring 0 stack segment selector is 0x10 (Kernel Data Segment)
     write_tss(5, 0x10, 0x0);
 
+    serial_debug_arch("[GDT] About to flush GDT\n");
     // Load the GDT
     gdt_flush(&gdtr);
+
+    serial_debug_arch("[GDT] GDT flushed, constructor done\n");
 }
 
 GDT::~GDT() = default;
@@ -55,18 +64,28 @@ void GDT::set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8
 
 void GDT::write_tss(int idx, uint32_t ss0, uint32_t esp0)
 {
-    tss_entry* tss = reinterpret_cast<tss_entry*>(&entries[idx]);
+    serial_debug_arch("[GDT] write_tss: zeroing TSS manually\n");
+    // Clear out the TSS structure manually (avoid potential memset issues)
+    uint8_t* tss_bytes = reinterpret_cast<uint8_t*>(&tss);
+    for (size_t i = 0; i < sizeof(tss_entry); ++i) {
+        tss_bytes[i] = 0;
+    }
 
-    // Clear out the TSS
-    std::memset(tss, 0, sizeof(tss_entry));
+    serial_debug_arch("[GDT] write_tss: TSS zeroed\n");
+    tss.SS0 = static_cast<uint16_t>(ss0);
+    tss.ESP0 = esp0;
 
-    tss->SS0 = ss0;
-    tss->ESP0 = esp0;
+    // We haven't implemented I/O permission bitmap yet so this is set to sizeof(tss)
+    tss.IOPB = sizeof(tss_entry);
 
-    uintptr_t base = reinterpret_cast<uintptr_t>(tss);
+    serial_debug_arch("[GDT] write_tss: setting GDT descriptor\n");
+    uintptr_t base = reinterpret_cast<uintptr_t>(&tss);
     uint32_t limit = sizeof(tss_entry);
 
-    set_gate(idx, base, limit, 0x89, 0x00);  // Access byte: Present, Ring 0, TSS (0x89)
+    // Access byte: Present, Ring 0, 32-bit TSS Available (0x89)
+    set_gate(idx, base, limit, 0x89, 0x40);
+
+    serial_debug_arch("[GDT] write_tss: done\n");
 }
 
 }  // namespace x86
