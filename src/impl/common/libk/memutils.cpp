@@ -1,5 +1,4 @@
 #include "memutils.hpp"
-
 #include "exceptions.hpp"
 #include "stdio.hpp"
 
@@ -39,12 +38,9 @@ void* memcpy(void* dest, const void* src, size_t len)
 
     unsigned char* d = static_cast<unsigned char*>(dest);
     const unsigned char* s = static_cast<const unsigned char*>(src);
-    std::io::println("Starting memcpy");
     for (size_t i = 0; i < len; ++i) {
         d[i] = s[i];
-        std::io::println("Copying byte");
     }
-    std::io::println("memcpy done");
     return dest;
 }
 

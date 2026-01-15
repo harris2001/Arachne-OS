@@ -1,5 +1,6 @@
 #include "x86_arch.hpp"
 
+#include "../common/libk/stdio.hpp"
 #include "gdt.hpp"
 
 namespace Arachne

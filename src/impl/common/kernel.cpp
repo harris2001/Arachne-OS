@@ -8,11 +8,7 @@
 
 extern "C" void kernel_main(void* /*multiboot_structure*/, unsigned int /*magicnumber*/)
 {
-    // Initialize architecture FIRST (sets up GDT, which is needed for memory access)
-    Arachne::Arch& arch = Arachne::Arch::get_instance();
-    arch.init();
-
-    // Now initialize VGA display (after GDT is set up)
+    //Initialize VGA display
     std::vga::init();
 
     std::io::println("Booting ArachneOS Minimal Kernel...");
@@ -47,6 +43,10 @@ extern "C" void kernel_main(void* /*multiboot_structure*/, unsigned int /*magicn
     std::io::println("          *#   +#  =%-  #+      #+   -#%%%=  #%   #*  :@+  #@.  =%@@%: ");
     std::io::println("");
     std::io::println("");
+
+    // Initialize architecture FIRST (sets up GDT, which is needed for memory access)
+    Arachne::Arch& arch = Arachne::Arch::get_instance();
+    arch.init();
 
     // Halt CPU
     while (1) {
