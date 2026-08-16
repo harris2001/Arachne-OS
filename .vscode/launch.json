@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to QEMU",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/kernel.bin",
+            "miDebuggerServerAddress": "localhost:1234",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb", 
+            "preLaunchTask": "Run QEMU GDB",
+            "stopAtEntry": true,
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Disable debuginfod",
+                    "text": "set debuginfod urls ",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
