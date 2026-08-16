@@ -64,10 +64,13 @@ void GDT::set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8
 
 void GDT::write_tss(int idx, uint32_t ss0, uint32_t esp0)
 {
+    using tss_entry = ::x86::TSS<::x86::Mode::Protected>; 
+    auto tss_size = sizeof(tss_entry);
+
     serial_debug_arch("[GDT] write_tss: zeroing TSS manually\n");
     // Clear out the TSS structure manually (avoid potential memset issues)
     uint8_t* tss_bytes = reinterpret_cast<uint8_t*>(&tss);
-    for (size_t i = 0; i < sizeof(tss_entry); ++i) {
+    for (size_t i = 0; i < tss_size; ++i) {
         tss_bytes[i] = 0;
     }
 
@@ -76,11 +79,11 @@ void GDT::write_tss(int idx, uint32_t ss0, uint32_t esp0)
     tss.ESP0 = esp0;
 
     // We haven't implemented I/O permission bitmap yet so this is set to sizeof(tss)
-    tss.IOPB = sizeof(tss_entry);
+    tss.IOPB = tss_size; 
 
     serial_debug_arch("[GDT] write_tss: setting GDT descriptor\n");
     uintptr_t base = reinterpret_cast<uintptr_t>(&tss);
-    uint32_t limit = sizeof(tss_entry);
+    uint32_t limit = tss_size;
 
     // Access byte: Present, Ring 0, 32-bit TSS Available (0x89)
     set_gate(idx, base, limit, 0x89, 0x40);
