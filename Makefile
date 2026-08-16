@@ -8,7 +8,7 @@ DEBUG ?= 1
 ifeq ($(ARCH),x86)
     NASM_FLAGS = -f elf32
     GPP = g++
-    GPP_FLAGS = -m32 -ffreestanding -O0 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common
+    GPP_FLAGS = -m32 -ffreestanding -O0 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common -mno-sse -mno-sse2 -mno-mmx 
 	ifeq ($(DEBUG),1)
 		GPP_FLAGS += -g -DDEBUG
 	else
@@ -38,8 +38,7 @@ endif
 BUILD_DIR = build
 ISO_DIR = $(TARGET_DIR)/iso
 ISO_FILE = $(BUILD_DIR)/$(ISO_NAME)
-QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown 
-
+QEMU_FLAGS = -cdrom $(ISO_FILE) -m 512M -boot d -no-reboot -no-shutdown -display gtk
 # ===== Source Files =====
 # Common kernel objects (architecture-independent)
 COMMON_OBJECTS = \
