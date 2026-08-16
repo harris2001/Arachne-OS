@@ -8,6 +8,8 @@ DEBUG ?= 1
 ifeq ($(ARCH),x86)
     NASM_FLAGS = -f elf32
     GPP = g++
+	# We need to add -mno-sse and -mno-sse2 to avoid generating SSE instructions, which are causing the kernel to crash while
+	# we are setting up the GDT and TSS. This is a temporary workaround until we can properly handle SSE in our kernel.
     GPP_FLAGS = -m32 -ffreestanding -O0 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostdinc++ -fno-use-cxa-atexit -Isrc/impl/common -mno-sse -mno-sse2 -mno-mmx 
 	ifeq ($(DEBUG),1)
 		GPP_FLAGS += -g -DDEBUG
