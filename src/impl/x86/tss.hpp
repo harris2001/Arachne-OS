@@ -66,4 +66,25 @@ struct TSS<Mode::Protected>
   uint16_t IOPB;  // I/O Map Base Address offset
   uint32_t SSP;   // Stack Shadow Pointer
 } __attribute__((packed));
+
+template <>
+struct TSS<Mode::Long>
+{
+  uint32_t reserved0;
+  uint64_t RSP0;  // Stack Pointer for Ring 0
+  uint64_t RSP1;  // Stack Pointer for Ring 1
+  uint64_t RSP2;  // Stack Pointer for Ring 2
+  uint64_t reserved1;
+  uint64_t IST1;  // Interrupt Stack Table (IST) entries
+  uint64_t IST2;
+  uint64_t IST3;
+  uint64_t IST4;
+  uint64_t IST5;
+  uint64_t IST6;
+  uint64_t IST7;
+  uint64_t reserved2;
+  uint16_t reserved3;
+  uint16_t IOPB;  // I/O Map Base Address offset
+} __attribute__((packed));
+
 } // namespace x86
